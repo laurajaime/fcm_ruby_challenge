@@ -1,3 +1,6 @@
 tmp
 log
 master.key
+
+db/development.sqlite3
+db/test.sqlite3
