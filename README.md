@@ -29,15 +29,20 @@ RESERVATION
 SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45
 ```
 
-## First steps
-`bin/rails db:init`
-
 ## Run rake to humanify itinerary
 
-You can run a command `bundle exec rake itinerary:humanify[<based_iata>,<raw_itinerary.txt>]` like
 
+### First steps
 
-`bundle exec rake itinerary:humanify[SVQ,raw_itinerary.txt]` to get a humanify itinerary like that:
+`docker-compose build`
+`docker-compose up`
+
+### Rake task
+
+You can run a command `docker-compose run --rm app itinerary:humanify[<based_iata>,<raw_itinerary.txt>]
+` like
+
+`docker-compose run --rm app itinerary:humanify[SVQ,raw_itinerary.txt]` to get a humanify itinerary like that:
 
 
 ```

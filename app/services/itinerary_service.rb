@@ -70,9 +70,9 @@ class ItineraryService
 
       case segment.segment_type
       when 'Hotel'
-        puts presenter.hotel_human_segment
+        puts presenter.formatted_hotel_segment
       when *TRANSPORT_TYPES
-        puts presenter.trip_human_segment
+        puts presenter.formatted_trip_segment
       end
 
       puts "\n" if end_of_trip?(segment) && !is_the_last_segment?(segment, next_segment)

@@ -5,5 +5,9 @@ services:
     build: .
     volumes:
       - .:/app
+      - db-data:/app/db
     working_dir: /app
-    entrypoint: ["sh", "-c"]
+    entrypoint: ["bundle", "exec", "rake"]
+
+volumes:
+  db-data:
