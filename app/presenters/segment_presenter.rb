@@ -13,6 +13,10 @@ class SegmentPresenter
     "#{segment.segment_type} from #{segment.from} to #{segment.to} at #{segment.from_date} #{parse_time(segment.from_time)} to #{parse_time(segment.to_time)}"
   end
 
+  def formatted_trip_title(next_segment)
+    "TRIP to #{next_segment&.to || segment.to}"
+  end
+
   private
 
   def parse_time(time)

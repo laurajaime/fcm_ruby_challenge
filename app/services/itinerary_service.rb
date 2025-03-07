@@ -10,14 +10,15 @@ class ItineraryService
     ActiveRecord::Base.transaction do
       existing_itinerary = Itinerary.find_by(based_iata: based, raw_content: raw_itinerary)
 
-      if existing_itinerary.present?
-        segments = existing_itinerary.segments
-      else
-        itinerary = persist_itinerary
-        persist_segments(itinerary)
+      segments = if existing_itinerary.present?
+                  existing_itinerary.segments
+                else
+                  itinerary = persist_itinerary
+                  persist_segments(itinerary)
 
-        segments = itinerary.segments
-      end
+                  itinerary.segments
+                end
+
       # Order segments by from_date, from_time and segment_type because we want to print the itinerary in order
       # taking into account the time of the fligths or trains and hotels
 
@@ -28,8 +29,6 @@ class ItineraryService
       print_itinerary(ordered_segments)
     rescue StandardError => e
       puts "Error humanifying itinerary: #{e}"
-    rescue ActiveRecord::RecordInvalid => e
-      puts "Error saving segments: #{e}"
     end
   end
 
@@ -61,7 +60,7 @@ class ItineraryService
       next_segment = index < segments.size - 1 ? segments[index + 1] : nil
 
       if start_of_trip?(segment)
-        puts "TRIP to #{next_segment&.to || segment.to}"
+        puts presenter.formatted_trip_title(next_segment)
       end
 
       if segment.is_a_hotel?
