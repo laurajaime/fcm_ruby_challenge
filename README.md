@@ -69,7 +69,7 @@ The solution involves reading the input file `raw_itinerary.txt` and taking into
   - Contains the core logic for parsing, persists, sorting, and grouping the segments.
   - Provides a method (`humanify`) to process the input and generate the itinerary.
 
-3. **Presenter (`ItineraryPresenter`)**:
+3. **Presenter (`SegmentPresenter`)**:
   - Formats the sorted and grouped segments into a human-readable itinerary.
   - Ensures the output is clear and well-structured.
 
