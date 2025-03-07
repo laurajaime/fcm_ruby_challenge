@@ -1,6 +1,7 @@
 # FCM Ruby challenge
 This is an api only app in RoR.
 
+## About challenge
 As we want to provide a better experience for our users we want to represent their itinerary in the most comprehensive way possible.
 
 We receive the reservations of our user that we know is based on SVQ as:
@@ -56,3 +57,38 @@ TRIP to NYC
 Flight from SVQ to BCN at 2023-03-02 06:40 to 09:10
 Flight from BCN to NYC at 2023-03-02 15:00 to 22:45
 ```
+
+## About the solution
+
+### Overview
+The solution involves reading the input file `raw_itinerary.txt` and taking into account the `based` argument, parsing the reservations, persisting segments and itinerary, sorting and grouping the segments by destination, and then printing the itinerary in a human-readable format. The main logic is implemented in a service, and a rake task is provided to facilitate running it within a Docker container.
+
+### Key components
+
+1. **Service (`ItineraryService`)**:
+  - Contains the core logic for parsing, persists, sorting, and grouping the segments.
+  - Provides a method (`humanify`) to process the input and generate the itinerary.
+
+3. **Presenter (`ItineraryPresenter`)**:
+  - Formats the sorted and grouped segments into a human-readable itinerary.
+  - Ensures the output is clear and well-structured.
+
+4. **Rake task**:
+  - Provides a convenient way to run the service with specified parameters.
+
+5. **Docker setup**:
+  - `docker-compose.yml` is used to define the application service.
+  - Ensures a consistent environment for print the itinerary.
+
+### What are included?
+- **Docker**: Ensures a consistent environment and simplifies dependencies.
+- **Rake task**: Provides an easy interface for print the itinerary.
+- **Service and presenter**: Separates concerns, making the code more modular, maintainable and extensible.
+- **Migrations and models**: Used to persist the itinerary and segments data, ensuring data integrity and enabling complex queries.
+- **Tests with rspec**: Ensures the correctness of the service and presenter logic, providing confidence in the solution's reliability.
+- **Rubocop**: Ensures code quality and enforces coding standards.
+
+### What are left out?
+- **More testing**: The solution includes basic tests to ensure the core functionality works as expected. More comprehensive tests can be added in the future as the solution evolves.
+- **Advanced features**: Focuses on the core functionality without adding unnecessary complexity.
+- **Extensive documentation**: Provides essential information to understand and run the solution, avoiding overly detailed documentation.
