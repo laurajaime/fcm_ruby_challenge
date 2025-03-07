@@ -31,7 +31,6 @@ SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45
 
 ## Run rake to humanify itinerary
 
-
 ### First steps
 
 Run `docker-compose up` to prepare application
@@ -39,7 +38,6 @@ Run `docker-compose up` to prepare application
 ### Run the rake task
 
 You can run a command like `docker-compose run --rm app itinerary:humanify[<based_iata>,<raw_itinerary.txt>]`
-
 
 `docker-compose run --rm app itinerary:humanify[SVQ,raw_itinerary.txt]` to get a humanify itinerary like that:
 

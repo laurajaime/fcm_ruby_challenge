@@ -1,6 +1,4 @@
 class ItineraryService
-  TRANSPORT_TYPES = %w[Flight Train].freeze
-
   def initialize(based, raw_itinerary_path)
     @based = based
     @raw_itinerary = read_raw_itinerary(raw_itinerary_path)
@@ -10,24 +8,22 @@ class ItineraryService
 
   def humanify
     ActiveRecord::Base.transaction do
-      if Itinerary.where(based_iata: based, raw_content: raw_itinerary).empty?
+      existing_itinerary = Itinerary.find_by(based_iata: based, raw_content: raw_itinerary)
+
+      if existing_itinerary.present?
+        segments = existing_itinerary.segments
+      else
         itinerary = persist_itinerary
         persist_segments(itinerary)
 
         segments = itinerary.segments
-      else
-        segments = Itinerary.find_by(based_iata: based, raw_content: raw_itinerary).segments
       end
       # Order segments by from_date, from_time and segment_type because we want to print the itinerary in order
       # taking into account the time of the fligths or trains and hotels
-      
-      # syntax for postgresql is more simple but we need to support sqlite
-      # ordered_segments = Segment.order(:from_date, :from_time, :segment_type)
-      # specific syntaxes for sqlite because of the lack of support for NULLS FIRST and NULLS LAST
-      ordered_segments = segments.order(
-        Arel.sql("CASE WHEN from_date IS NULL THEN 1 ELSE 0 END, from_date ASC"),
-        Arel.sql("CASE WHEN from_time IS NULL THEN 1 ELSE 0 END, from_time ASC"),
-        :segment_type)
+
+      # Specific syntax for sqlite because of the lack of support for NULLS FIRST and NULLS LAST
+      order_time_nulls = Arel.sql("CASE WHEN from_time IS NULL THEN 1 ELSE 0 END")
+      ordered_segments = segments.order(:from_date, order_time_nulls, :segment_type)
 
       print_itinerary(ordered_segments)
     rescue StandardError => e
@@ -68,10 +64,9 @@ class ItineraryService
         puts "TRIP to #{next_segment&.to || segment.to}"
       end
 
-      case segment.segment_type
-      when 'Hotel'
+      if segment.is_a_hotel?
         puts presenter.formatted_hotel_segment
-      when *TRANSPORT_TYPES
+      else segment.is_a_transport?
         puts presenter.formatted_trip_segment
       end
 
@@ -101,7 +96,7 @@ class ItineraryService
 
     # That asumes that the segments has always the following format:
     # ["SEGMENT:", "Flight", "SVQ", "2023-03-02", "06:40", "->", "BCN", "09:10"]
-    if raw_segment[1].in?(TRANSPORT_TYPES)
+    if raw_segment[1].in?(Segment::TRANSPORT_TYPES)
       attrs = {
         segment_type: raw_segment[1],
         from: raw_segment[2],
