@@ -1,0 +1,20 @@
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - config/**/*
+    - bin/**/*
+    - spec/spec_helper.rb
+    - spec/rails_helper.rb
+    - Gemfile
+    - Gemfile.lock
+    - Rakefile
+    - config.ru
+
+Metrics/BlockLength:
+  Max: 60
+Style/Documentation:
+  Enabled: false
+Layout/LineLength:
+  Max: 160
+Metrics/MethodLength:
+  Max: 20
